@@ -448,9 +448,9 @@ for i = 1:length(basinsClipped)
     ax6.XTick = [];
     ax6.YTick = [];
     ax6.Position = ax4.Position;
-    %print(f2,[archiveDir '/' num2str(basinsClipped(i).HUC8) '_' datestr(initTime,'yyyy-mm-dd_HH') '.png'],'-dpng','-r150');
+    print(f2,[archiveDir '/' num2str(basinsClipped(i).HUC8) '_' datestr(initTime,'yyyy-mm-dd_HH') '.png'],'-dpng','-r150');
     print(f2,[outputDir '/' num2str(basinsClipped(i).HUC8) '_current.png'],'-dpng','-r300');
-    %close(f2);
+    close(f2);
 end
 clear he;
 
