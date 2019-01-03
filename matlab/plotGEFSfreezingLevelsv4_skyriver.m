@@ -41,8 +41,8 @@ cmapFile = './MATfiles/RainSnowColorMap.mat';
 cmap3file = 'MATfiles/DivergentCMap.mat';
 
 % forecast initialization time
-initTime = datetime(2018,12,22,12,0,0);
-% initTime = dateshift(datetime(datestr(now)),'start','hour');
+% initTime = datetime(2018,12,22,12,0,0);
+initTime = dateshift(datetime(datestr(now)),'start','hour');
 
 % emsemble dimensions and timesteps
 nEns = 21; % ensemble members
@@ -169,7 +169,7 @@ end
 
 % establish bias-correction ratio as a function of time
 %ratioCoeffs = [-0.8490 6.0875];
-ratioCoeffs = [-0.4 4];
+ratioCoeffs = [-2/9 3];
 SDratio = polyval(ratioCoeffs, log1p(0:inct:lenf));
 
 Z0C_min = 0;
@@ -328,7 +328,7 @@ dateticklabels = cell(length(dateticks),1);
 ylabels2 = {'0: Below Watershed','0.1','0.2','0.3','0.4','0.5','0.6','0.7','0.8','0.9','1: Above Watershed'};
 cmap3struct = load(cmap3file,'CoolWarmFloat257');
 cmap3 = flipud(cmap3struct.CoolWarmFloat257(round(linspace(1,257,nEns)),:));
-barColors = [0 0.5 0; 0.8 1 0.8; 1 1 1];
+barColors = [linspace(0.25,0.95,nEns + 1)' linspace(0.5,0.95,nEns + 1)' linspace(0.25,0.95,nEns + 1)'];
 for i = 1:length(dateticks)
     dateticklabels{i} = sprintf('%s',datestr(dateticks(i),'dd-mmm'));
 end
@@ -340,7 +340,7 @@ for i = 1:length(basinsClipped)
     end 
     f2 = figure;
     f2.Units = 'centimeters';
-    f2.Position = [2 2 25 15];
+    f2.Position = [2 2 30 15];
     ax1 = axes();
     hold(ax1,'on');
     plot(time,1 - squeeze(basinFracAboveZ0C(:,:,i)),'-','Color',[0.75 0.75 0.75]);
@@ -391,7 +391,7 @@ for i = 1:length(basinsClipped)
     hb2.EdgeColor = 'k';
     for j = 1:ntP
         if roundn(basinPrecip(j,i),-1) > 0.254
-            ht = text(datenum(timeP(j)) - 7.5/24,basinPrecip(j,i) + 0.03*y3max,...
+            ht = text(datenum(timeP(j)) - 7/24,basinPrecip(j,i) + 0.03*y3max,...
                 sprintf('%4.1f',roundn(basinPrecip(j,i),-1)));
             ht.FontSize = 10;
             ht.Color = [0 0 0];
@@ -450,7 +450,7 @@ for i = 1:length(basinsClipped)
     ax6.Position = ax4.Position;
     %print(f2,[archiveDir '/' num2str(basinsClipped(i).HUC8) '_' datestr(initTime,'yyyy-mm-dd_HH') '.png'],'-dpng','-r150');
     print(f2,[outputDir '/' num2str(basinsClipped(i).HUC8) '_current.png'],'-dpng','-r300');
-    close(f2);
+    %close(f2);
 end
 clear he;
 
