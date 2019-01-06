@@ -2,7 +2,7 @@
 % downloads and plots plan view maps of GEFS probabilistic freezing level
 % heights relative to California terrain at different forecast hours 
 %
-% Brian Henn, CW3E/SIO/UCSD, February 2017
+% Brian Henn, CW3E/SIO/UCSD, January 2019
 % 
 % v2 created in May 2017 to include QPE in plots, extend to HUC-8s, show
 % basin-average values on main map and detailed info on insets
@@ -41,7 +41,6 @@ cmapFile = './MATfiles/RainSnowColorMap.mat';
 cmap3file = 'MATfiles/DivergentCMap.mat';
 
 % forecast initialization time
-% initTime = datetime(2018,12,22,12,0,0);
 initTime = dateshift(datetime(datestr(now)),'start','hour');
 
 % emsemble dimensions and timesteps
@@ -336,7 +335,7 @@ for i = 1:length(basinsClipped)
     basinDecileElLabels = cell(11,1);
     for j = 1:11
         basinDecileElLabels{j} = ...
-            sprintf('%u m (%u ft)',round(basinDecileElm(i,j)),round(m2ft(basinDecileElm(i,j))));
+            sprintf('%u m (%u ft)',round(basinDecileElm(i,j)),round(3.28084*basinDecileElm(i,j)));
     end 
     f2 = figure;
     f2.Units = 'centimeters';
@@ -361,9 +360,9 @@ for i = 1:length(basinsClipped)
     ax1.YLabel.String = 'Forecast Freezing Level';
     ax1.XLabel.String = 'Date [UTC, PST + 8]';
     ax1.Title.String = sprintf('%s Forecast Initialized %sZ\n7-day WPC Precipitation Total: %4.1f mm (%4.2f in) - %u%% Rain, %u%% Rain or Snow, %u%% Snow',...
-        basinsClipped(i).Name,datestr(initTime,'dd-mmm hh'),roundn(nansum(basinPrecip(:,i)),-1),...
+        basinsClipped(i).Name,datestr(initTime,'yyyy-mmm-dd hh '),roundn(nansum(basinPrecip(:,i)),-1),...
         roundn(nansum(basinPrecip(:,i))/25.4,-2),round(100*nansum(basinRain(:,i))/nansum(basinPrecip(:,i))),...
-        round(100*nansum(basinMixd(:,i))/nansum(basinPrecip(:,i))),round(100*nansum(basinSnow(:,i))/nansum(basinPrecip(:,i))));
+        round(100*nansum(nansum(basinMixd(:,i,:)))/nansum(basinPrecip(:,i))),round(100*nansum(basinSnow(:,i))/nansum(basinPrecip(:,i))));
     ax1.Title.FontSize = ax1.FontSize;
     ax2 = axes('Position',ax1.Position);
     ax2.Color = 'none';
@@ -455,6 +454,5 @@ end
 clear he;
 
 %%
-
 toc;
 quit;
