@@ -41,13 +41,14 @@ cmapFile = './MATfiles/RainSnowColorMap.mat';
 cmap3file = 'MATfiles/DivergentCMap.mat';
 
 % forecast initialization time
-initTime = dateshift(datetime(datestr(now)),'start','hour');
+initTime = datetime(2019,2,11,12,0,0);
+%initTime = dateshift(datetime(datestr(now)),'start','hour');
 
 % emsemble dimensions and timesteps
 nEns = 21; % ensemble members
 inct = 6; % forecast steps to plot (hours)
 lenf = 192; % length of GEFS forecast period (hours)
-incf = 3; % increment of GEFS forecast (hours)
+incf = 6; % increment of GEFS forecast (hours)
 incp = 6; % increment of WPC precipitation (hours)
 lenp = 168; % length of WPC precipitation forecast (hours)
 
@@ -78,7 +79,7 @@ Z0C = NaN(nEns,nt,size(LatGEFS,1),size(LatGEFS,2));
 for i = 1:nEns
     for j = 1:nt
         Z0C(i,j,:,:) = double(ncread(freezingLevelFile,'Z0C',...
-            [goodLon(1) goodLat(1) j*round((inct/incf)) - 1 i],[length(goodLon) length(goodLat) 1 1])');
+            [goodLon(1) goodLat(1) (j - 1)*round(inct/incf) + 1 i],[length(goodLon) length(goodLat) 1 1])');
     end
 end
 
@@ -447,7 +448,7 @@ for i = 1:length(basinsClipped)
     ax6.XTick = [];
     ax6.YTick = [];
     ax6.Position = ax4.Position;
-    print(f2,[archiveDir '/' num2str(basinsClipped(i).HUC8) '_' datestr(initTime,'yyyy-mm-dd_HH') '.png'],'-dpng','-r150');
+    %print(f2,[archiveDir '/' num2str(basinsClipped(i).HUC8) '_' datestr(initTime,'yyyy-mm-dd_HH') '.png'],'-dpng','-r150');
     print(f2,[outputDir '/' num2str(basinsClipped(i).HUC8) '_current.png'],'-dpng','-r300');
     close(f2);
 end
