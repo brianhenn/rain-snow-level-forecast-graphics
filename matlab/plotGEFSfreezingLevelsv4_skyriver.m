@@ -332,7 +332,7 @@ barColors = [linspace(0.25,0.95,nEns + 1)' linspace(0.5,0.95,nEns + 1)' linspace
 for i = 1:length(dateticks)
     dateticklabels{i} = sprintf('%s',datestr(dateticks(i),'dd-mmm'));
 end
-for i = 1:length(basinsClipped)
+for i = 48%1:length(basinsClipped)
     basinDecileElLabels = cell(11,1);
     for j = 1:11
         basinDecileElLabels{j} = ...
@@ -351,10 +351,10 @@ for i = 1:length(basinsClipped)
         he(j).MarkerSize = 10;
     end
     hm = plot(time,1 - squeeze(basinMeanFracAboveZ0C(:,i)),'k-.','LineWidth',1,'MarkerSize',10,'MarkerFaceColor','k');
-    ax1.XTick = datenum(dateticks);
+    ax1.XTick = dateticks;
     ax1.XTickLabel = dateticklabels;
     ax1.XGrid = 'on';
-    ax1.XLim = [datenum(initTime) datenum(initTime + hours(168))];
+    ax1.XLim = [(initTime) (initTime + hours(168))];
     ax1.YLim = [-0.01 1.01];
     ax1.YTick = 0:0.1:1;
     ax1.YTickLabel = basinDecileElLabels;
@@ -450,6 +450,8 @@ for i = 1:length(basinsClipped)
     ax6.Position = ax4.Position;
     %print(f2,[archiveDir '/' num2str(basinsClipped(i).HUC8) '_' datestr(initTime,'yyyy-mm-dd_HH') '.png'],'-dpng','-r150');
     print(f2,[outputDir '/' num2str(basinsClipped(i).HUC8) '_current.png'],'-dpng','-r300');
+%     save(f2, 'Tuolumne_time_series.fig');
+    savefig(f2, 'Tuolumne_time_series.fig')
     close(f2);
 end
 clear he;
